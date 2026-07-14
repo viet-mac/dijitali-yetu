@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dijitali Yetu — Digital Literacy, First Connected</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#10192E;
+    --navy-deep:#0A1220;
+    --gold:#E8A33D;
+    --gold-soft:#F2C777;
+    --green:#4F7965;
+    --parchment:#FBF7EF;
+    --ink:#1B2434;
+    --ink-soft:#4A5266;
+    --line:rgba(255,255,255,0.12);
+    --line-dark:rgba(27,36,52,0.12);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--parchment);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{font-family:'Fraunces',serif;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- BRAND BAR ---------- */
+  .brandbar{
+    background:var(--navy-deep); color:rgba(255,255,255,0.85); padding:10px 24px;
+    display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .brandbar b{color:var(--gold-soft); font-weight:500; letter-spacing:.1em;}
+  .brandbar .sep{color:rgba(255,255,255,0.3);}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:radial-gradient(ellipse at 50% -10%, #1c2c4e 0%, var(--navy) 55%, var(--navy-deep) 100%);
+    color:#fff;
+    padding:64px 24px 56px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-inner{max-width:760px; margin:0 auto; text-align:center; position:relative; z-index:2;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--gold-soft); display:flex; align-items:center;
+    justify-content:center; gap:10px; margin-bottom:22px; opacity:0; animation:fadeUp .7s ease forwards;
+  }
+  .hero h1{
+    font-size:clamp(34px,6vw,58px); font-weight:600; line-height:1.08; letter-spacing:-.01em;
+    opacity:0; animation:fadeUp .8s ease .1s forwards;
+  }
+  .hero h1 em{font-style:italic; color:var(--gold-soft); font-weight:500;}
+  .hero p{
+    margin-top:18px; font-size:17px; line-height:1.6; color:rgba(255,255,255,0.72); max-width:560px; margin-left:auto; margin-right:auto;
+    opacity:0; animation:fadeUp .8s ease .22s forwards;
+  }
+  @keyframes fadeUp{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);}}
+
+  /* signal bars — the signature element */
+  .signal{display:flex; align-items:flex-end; gap:4px; height:16px;}
+  .signal i{
+    display:block; width:4px; background:var(--gold-soft); border-radius:1px; opacity:.25;
+    animation:rise 1.4s ease infinite;
+  }
+  .signal i:nth-child(1){height:5px; animation-delay:0s;}
+  .signal i:nth-child(2){height:8px; animation-delay:.12s;}
+  .signal i:nth-child(3){height:11px; animation-delay:.24s;}
+  .signal i:nth-child(4){height:14px; animation-delay:.36s;}
+  .signal i:nth-child(5){height:16px; animation-delay:.48s;}
+  @keyframes rise{0%,100%{opacity:.25;} 50%{opacity:1;}}
+  @media (prefers-reduced-motion: reduce){
+    .signal i{animation:none; opacity:.85;}
+    .hero .eyebrow, .hero h1, .hero p{animation:none; opacity:1;}
+  }
+
+  .hero-meter{
+    max-width:340px; margin:34px auto 0; opacity:0; animation:fadeUp .8s ease .34s forwards;
+  }
+  .hero-meter-label{
+    display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace;
+    font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,0.55); margin-bottom:8px;
+  }
+  .hero-meter-track{
+    height:6px; background:rgba(255,255,255,0.12); border-radius:4px; overflow:hidden;
+  }
+  .hero-meter-fill{
+    height:100%; background:linear-gradient(90deg,var(--green),var(--gold-soft)); border-radius:4px;
+    width:0%; transition:width .6s ease;
+  }
+
+  /* ---------- LAYOUT ---------- */
+  .layout{max-width:1180px; margin:0 auto; display:flex; gap:0; align-items:flex-start;}
+  .sidebar{
+    width:280px; flex-shrink:0; position:sticky; top:0; height:100vh; overflow-y:auto;
+    padding:28px 18px 40px; border-right:1px solid var(--line-dark);
+  }
+  .sidebar-title{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--ink-soft); padding:0 10px 14px;
+  }
+  .nav-item{
+    display:flex; align-items:center; gap:11px; width:100%; text-align:left; background:none; border:none;
+    padding:10px 10px; border-radius:8px; cursor:pointer; font-family:'Inter',sans-serif; font-size:14px;
+    color:var(--ink-soft); transition:background .15s ease, color .15s ease;
+  }
+  .nav-item:hover{background:rgba(27,36,52,0.05);}
+  .nav-item.active{background:var(--navy); color:#fff;}
+  .nav-dot{
+    width:9px; height:9px; border-radius:50%; flex-shrink:0; border:1.5px solid var(--ink-soft); background:transparent;
+  }
+  .nav-item.active .nav-dot{border-color:var(--gold-soft);}
+  .nav-dot.done{background:var(--gold); border-color:var(--gold);}
+  .nav-num{font-family:'IBM Plex Mono',monospace; font-size:11px; opacity:.6; width:16px; flex-shrink:0;}
+
+  .content{flex:1; min-width:0; padding:48px 56px 90px;}
+  .content-inner{max-width:660px;}
+
+  .module-kicker{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--green); display:flex; align-items:center; gap:8px; margin-bottom:14px;
+  }
+  .content h2{font-size:32px; font-weight:600; line-height:1.15; margin-bottom:18px; letter-spacing:-.01em;}
+  .content .lede{font-size:16.5px; line-height:1.7; color:var(--ink-soft); margin-bottom:32px;}
+
+  .block{margin-bottom:34px;}
+  .block h3{font-size:14px; font-family:'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:.06em; color:var(--ink); margin-bottom:14px;}
+  ul.concepts{list-style:none;}
+  ul.concepts li{
+    padding:12px 0 12px 24px; border-bottom:1px solid var(--line-dark); font-size:15px; line-height:1.6; position:relative;
+  }
+  ul.concepts li:last-child{border-bottom:none;}
+  ul.concepts li::before{
+    content:"—"; position:absolute; left:0; color:var(--gold); font-weight:600;
+  }
+
+  .callout{
+    border-radius:12px; padding:20px 22px; font-size:14.5px; line-height:1.65;
+  }
+  .callout.try{background:#EEF4F0; border-left:3px solid var(--green);}
+  .callout.teach{background:#FBF0DD; border-left:3px solid var(--gold);}
+  .callout-label{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    display:block; margin-bottom:8px; font-weight:500;
+  }
+  .callout.try .callout-label{color:var(--green);}
+  .callout.teach .callout-label{color:#9A6B0F;}
+
+  /* quiz */
+  .quiz{background:var(--navy); color:#fff; border-radius:14px; padding:28px 26px; margin-top:38px;}
+  .quiz h3{font-family:'IBM Plex Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--gold-soft); margin-bottom:18px;}
+  .qitem{margin-bottom:22px;}
+  .qitem:last-child{margin-bottom:0;}
+  .qtext{font-size:15px; margin-bottom:10px; line-height:1.5;}
+  .qopts{display:flex; flex-direction:column; gap:8px;}
+  .qopt{
+    text-align:left; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#fff;
+    padding:10px 14px; border-radius:8px; font-size:14px; cursor:pointer; font-family:'Inter',sans-serif;
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .qopt:hover{background:rgba(255,255,255,0.1);}
+  .qopt.correct{background:rgba(79,121,101,0.5); border-color:var(--green);}
+  .qopt.wrong{background:rgba(196,82,71,0.35); border-color:#c45247;}
+  .qopt[disabled]{cursor:default;}
+
+  .nav-buttons{display:flex; justify-content:space-between; margin-top:44px; padding-top:24px; border-top:1px solid var(--line-dark);}
+  .btn{
+    font-family:'Inter',sans-serif; font-weight:600; font-size:14px; padding:11px 20px; border-radius:8px;
+    border:none; cursor:pointer; display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn-primary{background:var(--navy); color:#fff;}
+  .btn-primary:hover{background:var(--navy-deep);}
+  .btn-ghost{background:none; border:1px solid var(--line-dark); color:var(--ink);}
+  .btn-ghost:hover{background:rgba(27,36,52,0.05);}
+  .btn:disabled{opacity:.35; cursor:default;}
+
+  .mark-done{
+    display:flex; align-items:center; gap:10px; margin-top:30px; padding:14px 18px; border-radius:10px;
+    background:rgba(232,163,61,0.1); border:1px solid rgba(232,163,61,0.3); cursor:pointer; font-size:14px; font-weight:500;
+  }
+  .mark-done input{width:16px; height:16px; accent-color:var(--gold);}
+  .mark-done.locked{opacity:.55; cursor:not-allowed;}
+  .lock-hint{font-size:12.5px; color:var(--ink-soft); margin-top:8px;}
+  .miss-track{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.05em; color:rgba(255,255,255,0.5); margin-top:14px;}
+
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(10,18,32,0.72); display:none; align-items:center; justify-content:center;
+    z-index:100; padding:20px;
+  }
+  .modal-box{
+    background:var(--navy); color:#fff; border-radius:16px; padding:38px 34px; max-width:380px; text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  }
+  .modal-box h2{font-size:26px; color:var(--gold-soft); margin-bottom:12px;}
+  .modal-box p{font-size:14.5px; line-height:1.6; color:rgba(255,255,255,0.75); margin-bottom:24px;}
+
+  /* certificate */
+  .cert-box{
+    background:var(--navy); color:#fff; border-radius:16px; padding:40px; text-align:center; margin-top:20px;
+  }
+  .cert-box input{
+    font-family:'Fraunces',serif; font-size:20px; text-align:center; background:transparent; border:none;
+    border-bottom:2px solid var(--gold-soft); color:#fff; padding:8px; width:100%; max-width:340px; margin:18px 0 26px;
+  }
+  .cert-box input::placeholder{color:rgba(255,255,255,0.4);}
+  .cert-box input:focus{outline:none;}
+
+  .cert-form{max-width:360px; margin:0 auto; text-align:left; display:flex; flex-direction:column; gap:14px;}
+  .cert-field label{
+    display:block; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:rgba(255,255,255,0.5); margin-bottom:6px;
+  }
+  .cert-field input{
+    width:100%; font-family:'Inter',sans-serif; font-size:14px; text-align:left; background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.16); border-radius:8px; color:#fff; padding:10px 12px; margin:0;
+  }
+  .cert-field input::placeholder{color:rgba(255,255,255,0.32);}
+  .cert-field input:focus{outline:none; border-color:var(--gold-soft);}
+  .cert-status{font-size:12.5px; margin-top:14px; color:rgba(255,255,255,0.6); min-height:16px;}
+  .cert-status.ok{color:var(--gold-soft);}
+  .btn-send{
+    background:var(--gold); color:var(--navy-deep); width:100%; justify-content:center; margin-top:6px;
+    font-size:14px; padding:12px 20px;
+  }
+  .btn-send:hover{background:var(--gold-soft);}
+  .btn-send:disabled{opacity:.4; cursor:not-allowed;}
+
+  @media (max-width:880px){
+    .sidebar{position:fixed; left:-300px; top:0; z-index:50; background:var(--parchment); width:260px; transition:left .2s ease; box-shadow:2px 0 20px rgba(0,0,0,0.15);}
+    .sidebar.open{left:0;}
+    .content{padding:36px 22px 80px;}
+    .menu-toggle{
+      display:flex; position:fixed; bottom:20px; right:20px; z-index:60; width:52px; height:52px; border-radius:50%;
+      background:var(--navy); color:#fff; align-items:center; justify-content:center; border:none; box-shadow:0 6px 18px rgba(0,0,0,0.25);
+      font-family:'IBM Plex Mono',monospace; font-size:11px; cursor:pointer;
+    }
+  }
+  .menu-toggle{display:none;}
+</style>
+</head>
+<body>
+
+<div class="brandbar"><b>OUR FUTURE PRIZE</b><span class="sep">×</span><span>Mac House Studio, Media Partner</span></div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow"><span class="signal"><i></i><i></i><i></i><i></i><i></i></span> DIJITALI YETU · FACILITATOR EDITION</div>
+    <h1>The connection just<br><em>arrived.</em> Now what?</h1>
+    <p>A train-the-trainer course for teachers bringing Starlink-connected classrooms online for the first time — built to be taught again, to your students, in your own words.</p>
+    <div class="hero-meter">
+      <div class="hero-meter-label"><span>Course signal</span><span id="pct-label">0%</span></div>
+      <div class="hero-meter-track"><div class="hero-meter-fill" id="pct-fill"></div></div>
+    </div>
+    <p style="font-size:11.5px; color:rgba(255,255,255,0.4); margin-top:16px; max-width:420px; margin-left:auto; margin-right:auto; line-height:1.5;">This course logs anonymous progress data (general location, time spent) to help plan future rollouts. You can decline the location prompt and continue normally — it never affects your certificate.</p>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-title">9 Modules</div>
+    <nav id="nav-list"></nav>
+  </div>
+  <div class="content"><div class="content-inner" id="content"></div></div>
+</div>
+
+<button class="menu-toggle" id="menu-toggle">MENU</button>
+
+<div class="modal-overlay" id="reset-modal">
+  <div class="modal-box">
+    <h2>Uh oh!</h2>
+    <p>You've missed 3 questions, so please try again from the beginning. Take your time on each answer — you've got this.</p>
+    <button class="btn btn-primary" id="reset-ok-btn">Start over</button>
+  </div>
+</div>
+
+<script>
+const MODULES = [
+{
+  id:'welcome', kicker:'Module 01 · Orientation', title:'Digital literacy in the Starlink era',
+  lede:"Your classroom just went from offline to online, possibly overnight. That's a bigger shift than a new textbook — it changes what students can find, who they can talk to, and what you're responsible for teaching them to handle. This module sets the frame for everything that follows.",
+  concepts:[
+    "Connectivity is not the same as literacy. A fast connection without guidance can expose students to scams, misinformation, and distraction faster than it delivers benefit.",
+    "You don't need to be a computer expert to teach this well. You need to be one lesson ahead of your students and honest about what you're both still learning.",
+    "This course is built to be re-taught. Every module has a 'Teach It' box showing how to adapt the same material for your students, whatever their age."
+  ],
+  tryIt:"Before your next session, write down three things you personally still find confusing about being online. Bring them up honestly with your class later — it models that not-knowing is normal.",
+  teachIt:"With students, open by asking what they already do online (even on a shared or borrowed phone). Build the course around their real habits, not a blank slate.",
+  quiz:[
+    {q:"What is the main risk of fast connectivity arriving without any guidance?", opts:["Devices get too hot","Students may be exposed to harm faster than they get benefit","Internet becomes too slow to use","There is no real risk"], correct:1},
+    {q:"What does this course assume about the teacher's tech skill level?", opts:["Expert level required","None required — just one lesson ahead of students","Must be a certified IT professional","Only for young teachers"], correct:1}
+  ]
+},
+{
+  id:'connected', kicker:'Module 02 · Getting Online', title:'Devices, browsers, and the Starlink basics',
+  lede:"Most connectivity problems in a newly connected classroom aren't really about the internet — they're about not knowing which button does what. This module gives you the vocabulary and troubleshooting steps to stay calm when something doesn't load.",
+  concepts:[
+    "A browser (Chrome, Safari, Firefox) is the app you use to reach websites — it is not the internet itself. Confusing the two makes troubleshooting harder for beginners.",
+    "A Starlink connection can be strong but still 'feel' slow if too many devices share it at once — plan shared-device sessions with that in mind.",
+    "Basic troubleshooting order: check the dish has clear sky view, restart the router, then restart the device — in that order, before assuming something is broken.",
+    "Bookmark or write down 4–5 trusted websites your class will actually use, so early lessons don't rely on search alone."
+  ],
+  tryIt:"Do a 'cold start' drill: unplug the router, have a student walk the class through reconnecting from memory, step by step, out loud.",
+  teachIt:"Give students a laminated one-page 'if it doesn't load' checklist to keep by the device. Troubleshooting confidence reduces panic and reduces requests for help you can't always give immediately.",
+  quiz:[
+    {q:"A browser is:", opts:["The same thing as the internet","The app used to reach websites, not the internet itself","A type of Starlink dish","A password manager"], correct:1},
+    {q:"What's the first troubleshooting step when something won't load?", opts:["Buy a new device","Check the dish has a clear view of the sky","Delete the browser","Call Starlink support immediately"], correct:1}
+  ]
+},
+{
+  id:'search', kicker:'Module 03 · Finding Things', title:'Search skills and evaluating what you find',
+  lede:"Search engines return confident-looking answers whether they're accurate or not. Teaching students to question a source is now as important as teaching them to find one.",
+  concepts:[
+    "Specific search terms beat vague ones. 'Causes of soil erosion Rift Valley' returns better results than 'why is soil bad.'",
+    "Check who published a page and when, before trusting its content — a school project page and a government ministry page are not equally reliable.",
+    "Images and videos can be taken out of context or altered. If a result seems designed to shock or provoke a strong reaction, treat it as unverified until confirmed elsewhere.",
+    "Wikipedia is a reasonable starting point for orientation, but its source list at the bottom of the article is often more useful than the article text itself."
+  ],
+  tryIt:"Search the same question two different ways and compare the top three results. Notice how much the wording of your search changes what you're shown.",
+  teachIt:"Run a 'source detective' activity: give students three articles on the same topic — one reliable, one biased, one outdated — and have them identify which is which and why.",
+  quiz:[
+    {q:"Which search term is likely to return the most useful results?", opts:["\"things about weather\"","\"causes of drought in Kenya 2025\"","\"weather bad\"","\"tell me stuff\""], correct:1},
+    {q:"What should you check before trusting a webpage's claims?", opts:["The color of the website","Who published it and when","How many ads it has","Nothing, if it appears first in search"], correct:1}
+  ]
+},
+{
+  id:'comms', kicker:'Module 04 · Communicating', title:'Email, messaging, and online netiquette',
+  lede:"Writing to a teacher, a stranger, or a group chat all call for different registers. Most students have never been taught the difference — and most adults picked it up by trial and error.",
+  concepts:[
+    "An email to a teacher or institution needs a clear subject line, a greeting, and a signed name — treat it like a written letter, not a chat message.",
+    "Group chats (WhatsApp, Telegram) spread information fast, including wrong information. Before forwarding something in a class or family group, pause and ask: do I know this is true?",
+    "Screenshots and forwarded messages can be edited. Treat a forwarded message with the same skepticism as an unfamiliar website.",
+    "Tone is easy to misread in text. When a message could be read as harsh, read it back once before sending."
+  ],
+  tryIt:"Have students draft a real email to you (the teacher) requesting something — a deadline extension, a question about homework — and review it together before sending.",
+  teachIt:"Role-play the same message sent three ways: to a teacher, to a friend, to a stranger. Ask students to spot what changed and why it should.",
+  quiz:[
+    {q:"What should you check before forwarding a message in a group chat?", opts:["Whether it's funny","Whether you know it's actually true","Whether it's long","Nothing — forward it right away"], correct:1},
+    {q:"A message to a teacher should be written most like:", opts:["A quick chat message","A formal or semi-formal letter","A social media post","Song lyrics"], correct:1}
+  ]
+},
+{
+  id:'safety', kicker:'Module 05 · Staying Safe', title:'Passwords, privacy, and spotting scams',
+  lede:"Newly connected users are a common target for scams precisely because they're new. This is the module where clear, memorable habits matter more than technical depth.",
+  concepts:[
+    "A strong password is long and unique per account — a memorable phrase with a number and symbol beats a short 'clever' word.",
+    "No legitimate bank, mobile money service, or school will ever ask for a password or PIN over chat, call, or email. Treat any such request as a scam, without exception.",
+    "Personal information (full name, school, home area, daily schedule) shouldn't be posted publicly where strangers can piece together a pattern.",
+    "'Too good to be true' offers — free phones, guaranteed prizes, urgent money requests from a 'relative' — are the oldest scam pattern online and still the most effective."
+  ],
+  tryIt:"As a group, look at three real (anonymized) scam messages and identify the specific red flag in each one out loud.",
+  teachIt:"Have students design their own scam message as an exercise — then swap with a partner to spot the tricks. Building the trap teaches recognition faster than only being warned about it.",
+  quiz:[
+    {q:"Who is allowed to ask you for your password or PIN?", opts:["Your bank, if they call","No one, ever, over chat or call","Your school administrator only","Anyone claiming to be from Starlink"], correct:1},
+    {q:"A message promising a free phone if you click a link is most likely:", opts:["A special reward for being new online","A scam","Guaranteed and safe","From the government"], correct:1}
+  ]
+},
+{
+  id:'citizen', kicker:'Module 06 · Digital Citizenship', title:'Behavior, footprint, and cyberbullying',
+  lede:"What's posted, sent, or searched tends to outlast the moment it happened. This module is about helping students understand permanence and treat each other well in spaces where a teacher can't always be watching.",
+  concepts:[
+    "A digital footprint is the trail of everything posted, searched, and shared — much of it harder to fully delete than students expect.",
+    "The same respect rules that apply in a classroom apply online: no one is invisible just because a screen is involved.",
+    "Cyberbullying often escalates because it feels lower-stakes to the person doing it than to the person receiving it. Naming this gap directly helps.",
+    "If a student reports online harassment, the first response should be to believe them and involve a trusted adult — not to tell them to simply log off."
+  ],
+  tryIt:"Ask students to imagine a future employer or university looking up their name. What would that person find? Discuss without judgment.",
+  teachIt:"Set one class agreement for online behavior, written by the students themselves, and revisit it the way you would a classroom rule.",
+  quiz:[
+    {q:"What is a 'digital footprint'?", opts:["A type of shoe","The trail of everything you post, search, and share online","A Starlink cable","A password"], correct:1},
+    {q:"If a student tells you they're being harassed online, the first step is to:", opts:["Tell them to stop using the internet","Believe them and involve a trusted adult","Ignore it, it's not real","Ask them what they did to cause it"], correct:1}
+  ]
+},
+{
+  id:'ai', kicker:'Module 07 · AI Tools', title:'Using AI assistants honestly in the classroom',
+  lede:"Students now have access to AI tools that can answer questions, write essays, and hold conversations. Banning them outright rarely works — teaching honest, useful use does.",
+  concepts:[
+    "AI tools are useful for brainstorming, explaining a concept a second way, or checking grammar — they are not a reliable source of facts on their own and can state wrong things confidently.",
+    "Using AI to think through a problem is different from using it to produce final work and submitting it as your own — students need the difference named clearly, not left implied.",
+    "AI-generated text has no personal experience behind it. Work that's meant to reflect a student's own voice or reasoning loses its purpose if it's fully AI-written.",
+    "Treat AI output the way you'd treat an uncredited classmate's answer: a useful starting point to verify, not a finished, trustworthy one."
+  ],
+  tryIt:"As a group, ask an AI assistant the same factual question you searched in Module 3, and compare its answer against what you found from a real source.",
+  teachIt:"Agree on class rules for when AI help is allowed (brainstorming, checking work) versus not allowed (final essay writing), and put it in writing so expectations are clear.",
+  quiz:[
+    {q:"AI assistants should be treated as:", opts:["Always factually correct","A useful but unverified starting point","Illegal to use","A replacement for teachers"], correct:1},
+    {q:"What matters most when deciding whether AI use is appropriate for an assignment?", opts:["Whether it saves time","Whether the assignment is meant to reflect the student's own thinking","Whether the AI is free to use","Whether it's popular"], correct:1}
+  ]
+},
+{
+  id:'teaching', kicker:'Module 08 · Teaching With Tech', title:'Lesson design for low-bandwidth classrooms',
+  lede:"A connection doesn't mean every lesson needs a screen. The strongest tech-enabled classrooms use connectivity deliberately, for the moments it actually adds value.",
+  concepts:[
+    "Download or cache material in advance where possible, so a lesson isn't dependent on a live connection holding steady for 40 minutes.",
+    "Shared-device classrooms work best with clear rotation and a defined task per turn — 'explore freely' rarely works with limited devices and time.",
+    "Pair every online activity with an offline follow-up (a written reflection, a group discussion) so connectivity supports learning rather than replacing it.",
+    "Keep a simple backup plan for every tech-dependent lesson, in case the connection drops mid-class."
+  ],
+  tryIt:"Take one lesson you already teach well offline and redesign a single 15-minute segment of it to use the internet purposefully — not as decoration.",
+  teachIt:"This one is for you directly: share your redesigned segment with another teacher at your school and get their feedback before running it live.",
+  quiz:[
+    {q:"What should every tech-dependent lesson have?", opts:["A backup plan in case the connection drops","Nothing extra is needed","A test at the end only","A ban on offline work"], correct:0},
+    {q:"In a shared-device classroom, what works best?", opts:["Fully open free exploration","Clear rotation with a defined task per turn","One student uses the device all class","No structure at all"], correct:1}
+  ]
+},
+{
+  id:'trainer', kicker:'Module 09 · Teach It Forward', title:'Your facilitator toolkit',
+  lede:"You've been through the whole course as a learner. This closing module is about running it again — this time with you leading a room, whether that room is a staff training or a classroom of students.",
+  concepts:[
+    "Every module in this course already has a 'Teach It' box — that's your lesson plan starting point. Adapt the language, not the core idea, for your audience's age.",
+    "Run modules in order the first time; after that, teach whichever module answers the most urgent problem your students are actually facing.",
+    "Keep sessions short — one module per sitting is enough. Retention drops fast when digital literacy is rushed through in a single long session.",
+    "Collect one real example each week (a scam message someone received, a search that went wrong) from your own community — real examples land harder than hypothetical ones."
+  ],
+  tryIt:"Pick the module that felt most relevant to your own students right now, and sketch a 20-minute version of it you could teach this week.",
+  teachIt:"Print or save the 'Teach It' box from each module as a standalone facilitator card — it's designed to work as a quick-reference on its own.",
+  quiz:[
+    {q:"How many modules should a single training sitting cover for best retention?", opts:["All nine at once","One module per sitting", "Whatever fits in the time available","None — just distribute the reading"], correct:1},
+    {q:"What makes examples land harder with students?", opts:["Making them longer","Using real, local examples instead of hypothetical ones","Reading them faster","Avoiding examples altogether"], correct:1}
+  ]
+}
+];
+
+let progress = {};
+let current = 0;
+
+// ---------- Sheet logging (Google Apps Script Web App) ----------
+const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzeFT6_T8Vc9xFTKY5dlo2qVOdWztnHVRhKPe1Qh31Q47eWhf2KW-_zyogjG7Cps8Wn/exec';
+const SESSION_ID = 'sess-' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+const startTime = Date.now();
+let geo = { status: 'not asked', lat: '', lng: '' };
+
+function requestGeo(){
+  if(!navigator.geolocation){ geo.status = 'unsupported'; logEvent('started'); return; }
+  navigator.geolocation.getCurrentPosition(
+    pos => { geo = { status:'granted', lat: pos.coords.latitude, lng: pos.coords.longitude }; logEvent('started'); },
+    ()  => { geo.status = 'denied'; logEvent('started'); },
+    { timeout: 8000 }
+  );
+}
+
+async function logEvent(eventName, extra){
+  if(!SHEET_ENDPOINT) return; // not wired up yet — safe no-op
+  const payload = Object.assign({
+    event: eventName,
+    sessionId: SESSION_ID,
+    userAgent: navigator.userAgent,
+    latitude: geo.lat,
+    longitude: geo.lng,
+    locationStatus: geo.status,
+    timeSpentMinutes: Math.round((Date.now() - startTime) / 60000)
+  }, extra || {});
+  try{
+    await fetch(SHEET_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    });
+  }catch(e){ /* non-blocking — never interrupt the learner over a logging failure */ }
+}
+
+async function loadProgress(){
+  try{
+    const res = await window.storage.get('dijitali-yetu-progress');
+    if(res && res.value){ progress = JSON.parse(res.value); }
+  }catch(e){ progress = {}; }
+  render();
+}
+async function saveProgress(){
+  try{ await window.storage.set('dijitali-yetu-progress', JSON.stringify(progress)); }catch(e){}
+}
+
+function pctComplete(){
+  const done = MODULES.filter(m=>progress[m.id]).length;
+  return Math.round((done/MODULES.length)*100);
+}
+
+function updateMeter(){
+  const p = pctComplete();
+  document.getElementById('pct-fill').style.width = p+'%';
+  document.getElementById('pct-label').textContent = p+'%';
+}
+
+function renderNav(){
+  const nav = document.getElementById('nav-list');
+  nav.innerHTML = '';
+  MODULES.forEach((m,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'nav-item' + (i===current ? ' active':'');
+    btn.innerHTML = `<span class="nav-num mono">${String(i+1).padStart(2,'0')}</span><span class="nav-dot ${progress[m.id]?'done':''}"></span><span>${m.title}</span>`;
+    btn.onclick = ()=>{ current = i; render(); document.getElementById('sidebar').classList.remove('open'); window.scrollTo({top:0,behavior:'smooth'}); };
+    nav.appendChild(btn);
+  });
+}
+
+function renderQuiz(mod){
+  const qState = progress[`quiz-${mod.id}`] || new Array(mod.quiz.length).fill(false);
+  const missCount = progress['__missCount'] || 0;
+  return `<div class="quiz"><h3>Quick check — answer correctly to unlock this module</h3>${mod.quiz.map((q,qi)=>{
+    const locked = qState[qi];
+    return `
+    <div class="qitem">
+      <div class="qtext">${qi+1}. ${q.q}</div>
+      <div class="qopts" id="q-${mod.id}-${qi}">
+        ${q.opts.map((o,oi)=>`<button class="qopt ${locked && oi===q.correct ? 'correct':''}" ${locked?'disabled':''} onclick="answerQuiz('${mod.id}',${qi},${oi},${q.correct})">${o}</button>`).join('')}
+      </div>
+    </div>`;
+  }).join('')}
+  <div class="miss-track">Misses so far: ${missCount} / 3 — three misses and you'll restart the course</div>
+  </div>`;
+}
+
+window.answerQuiz = async function(modId, qi, chosen, correct){
+  const group = document.getElementById(`q-${modId}-${qi}`);
+  const btns = group.querySelectorAll('.qopt');
+
+  if(chosen === correct){
+    btns.forEach((b,i)=>{ b.disabled = true; if(i===correct) b.classList.add('correct'); });
+    const key = `quiz-${modId}`;
+    const mod = MODULES.find(m=>m.id===modId);
+    const qState = progress[key] || new Array(mod.quiz.length).fill(false);
+    qState[qi] = true;
+    progress[key] = qState;
+    await saveProgress();
+    refreshLockState(modId);
+    return;
+  }
+
+  // wrong answer
+  btns.forEach((b,i)=>{
+    b.disabled = true;
+    if(i===chosen) b.classList.add('wrong');
+    if(i===correct) b.classList.add('correct');
+  });
+
+  progress['__missCount'] = (progress['__missCount'] || 0) + 1;
+  await saveProgress();
+
+  if(progress['__missCount'] >= 3){
+    setTimeout(showResetModal, 700);
+    return;
+  }
+
+  // let them retry after a brief pause
+  setTimeout(()=>{
+    btns.forEach(b=>{ b.disabled = false; b.classList.remove('wrong','correct'); });
+    const tracker = document.querySelector('.miss-track');
+    if(tracker) tracker.textContent = `Misses so far: ${progress['__missCount']} / 3 — three misses and you'll restart the course`;
+  }, 900);
+};
+
+function refreshLockState(modId){
+  const mod = MODULES.find(m=>m.id===modId);
+  const qState = progress[`quiz-${modId}`] || new Array(mod.quiz.length).fill(false);
+  const allCorrect = qState.every(v=>v===true);
+  const checkbox = document.getElementById('done-check');
+  const label = document.getElementById('mark-done-label');
+  const hint = document.getElementById('lock-hint');
+  if(checkbox){
+    checkbox.disabled = !allCorrect;
+    if(label) label.classList.toggle('locked', !allCorrect);
+  }
+  if(hint) hint.style.display = allCorrect ? 'none' : 'block';
+}
+
+async function generateCertificateImage(name, school){
+  await document.fonts.ready;
+  const canvas = document.createElement('canvas');
+  canvas.width = 1400; canvas.height = 990;
+  const ctx = canvas.getContext('2d');
+
+  // background
+  const grad = ctx.createLinearGradient(0,0,1400,990);
+  grad.addColorStop(0, '#1c2c4e');
+  grad.addColorStop(0.55, '#10192E');
+  grad.addColorStop(1, '#0A1220');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,1400,990);
+
+  // border
+  ctx.strokeStyle = '#E8A33D';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(40,40,1320,910);
+  ctx.strokeStyle = 'rgba(232,163,61,0.35)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(56,56,1288,878);
+
+  ctx.textAlign = 'center';
+
+  // brand line
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.font = '500 20px IBM Plex Mono, monospace';
+  ctx.fillText('OUR FUTURE PRIZE  ×  MAC HOUSE STUDIO', 700, 150);
+
+  // signal bars motif
+  const barX = 700, barY = 190, barGap = 14, barW = 8;
+  const heights = [14,22,30,38,46];
+  heights.forEach((h,i)=>{
+    ctx.fillStyle = '#F2C777';
+    const x = barX - (heights.length*barGap)/2 + i*barGap;
+    ctx.fillRect(x, barY - h, barW, h);
+  });
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '600 26px Fraunces, serif';
+  ctx.fillText('Certificate of Completion', 700, 270);
+
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.font = '400 20px Inter, sans-serif';
+  ctx.fillText('This certifies that', 700, 340);
+
+  ctx.fillStyle = '#F2C777';
+  ctx.font = 'italic 600 66px Fraunces, serif';
+  ctx.fillText(name || 'Learner', 700, 440);
+
+  ctx.fillStyle = 'rgba(255,255,255,0.75)';
+  ctx.font = '400 21px Inter, sans-serif';
+  wrapText(ctx, 'has completed the Dijitali Yetu facilitator course and is ready to teach', 700, 510, 980, 30);
+  wrapText(ctx, 'digital literacy forward in their classroom.', 700, 545, 980, 30);
+
+  if(school){
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '500 22px Inter, sans-serif';
+    ctx.fillText(school, 700, 630);
+  }
+
+  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.font = '400 16px IBM Plex Mono, monospace';
+  ctx.fillText(new Date().toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'}), 700, 700);
+
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+  ctx.beginPath(); ctx.moveTo(500,850); ctx.lineTo(900,850); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.font = '500 16px IBM Plex Mono, monospace';
+  ctx.fillText('DIJITALI YETU · FACILITATOR EDITION', 700, 880);
+
+  return canvas.toDataURL('image/png');
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight){
+  const words = text.split(' ');
+  let line = '';
+  const lines = [];
+  words.forEach(w=>{
+    const test = line + w + ' ';
+    if(ctx.measureText(test).width > maxWidth && line !== ''){ lines.push(line); line = w + ' '; }
+    else{ line = test; }
+  });
+  lines.push(line);
+  lines.forEach((l,i)=> ctx.fillText(l.trim(), x, y + i*lineHeight));
+}
+
+function showResetModal(){
+  document.getElementById('reset-modal').style.display = 'flex';
+}
+
+
+function renderModule(mod, idx){
+  const isLast = idx === MODULES.length-1;
+  let certHtml = '';
+  if(isLast){
+    const saved = progress['__cert'] || {};
+    certHtml = `
+    <div class="cert-box">
+      <div class="module-kicker" style="color:var(--gold-soft); justify-content:center;">Certificate of Completion</div>
+      <h2 style="color:#fff; font-size:24px; margin-bottom:6px;">Claim your certificate</h2>
+      <p style="color:rgba(255,255,255,0.6); font-size:13.5px; margin-bottom:22px;">Fill this in once — it's sent to Mac House and copied to your own email as your certificate.</p>
+      <div class="cert-form">
+        <div class="cert-field"><label>Full name</label><input type="text" id="cert-name" placeholder="Your name" value="${saved.name||''}" /></div>
+        <div class="cert-field"><label>Email</label><input type="email" id="cert-email" placeholder="you@email.com" value="${saved.email||''}" /></div>
+        <div class="cert-field"><label>School</label><input type="text" id="cert-school" placeholder="Your school" value="${saved.school||''}" /></div>
+        <div class="cert-field"><label>WhatsApp number</label><input type="tel" id="cert-whatsapp" placeholder="+254 7xx xxx xxx" value="${saved.whatsapp||''}" /></div>
+        <button class="btn btn-send" id="send-cert-btn">Send my certificate</button>
+        <div class="cert-status" id="cert-status">${saved.sentAt ? 'Sent — your certificate was emailed to you.' : ''}</div>
+      </div>
+    </div>`;
+  }
+  return `
+    <div class="module-kicker"><span class="signal" style="height:11px;"><i style="height:4px;"></i><i style="height:6px;"></i><i style="height:8px;"></i><i style="height:10px;"></i><i style="height:11px;"></i></span> ${mod.kicker}</div>
+    <h2>${mod.title}</h2>
+    <p class="lede">${mod.lede}</p>
+    <div class="block">
+      <h3>Key ideas</h3>
+      <ul class="concepts">${mod.concepts.map(c=>`<li>${c}</li>`).join('')}</ul>
+    </div>
+    <div class="block" style="display:flex; flex-direction:column; gap:14px;">
+      <div class="callout try"><span class="callout-label">Try it — for you</span>${mod.tryIt}</div>
+      <div class="callout teach"><span class="callout-label">Teach it — for your students</span>${mod.teachIt}</div>
+    </div>
+    ${renderQuiz(mod)}
+    ${certHtml}
+    <label class="mark-done ${(function(){const qs=progress['quiz-'+mod.id]||new Array(mod.quiz.length).fill(false); return qs.every(v=>v===true)?'':'locked';})()}" id="mark-done-label">
+      <input type="checkbox" id="done-check" ${progress[mod.id] ? 'checked':''} ${(function(){const qs=progress['quiz-'+mod.id]||new Array(mod.quiz.length).fill(false); return qs.every(v=>v===true)?'':'disabled';})()} onchange="toggleDone('${mod.id}')" />
+      Mark this module complete
+    </label>
+    <div class="lock-hint" id="lock-hint" style="display:${(function(){const qs=progress['quiz-'+mod.id]||new Array(mod.quiz.length).fill(false); return qs.every(v=>v===true)?'none':'block';})()}">Answer every quick-check question correctly to unlock this.</div>
+    <div class="nav-buttons">
+      <button class="btn btn-ghost" id="prev-btn" ${idx===0?'disabled':''}>← Previous</button>
+      ${isLast ? '' : '<button class="btn btn-primary" id="next-btn">Next module →</button>'}
+    </div>
+  `;
+}
+
+window.toggleDone = function(modId){
+  const mod = MODULES.find(m=>m.id===modId);
+  const qs = progress[`quiz-${modId}`] || new Array(mod.quiz.length).fill(false);
+  if(!qs.every(v=>v===true)) return; // locked — can't complete without correct answers
+  progress[modId] = !progress[modId];
+  saveProgress();
+  updateMeter();
+  renderNav();
+  if(progress[modId]) logEvent('module_complete', { moduleId: modId, modulesCompleted: MODULES.filter(m=>progress[m.id]).length, totalModules: MODULES.length });
+};
+
+document.getElementById('reset-ok-btn').onclick = ()=>{
+  progress = {};
+  current = 0;
+  saveProgress();
+  document.getElementById('reset-modal').style.display = 'none';
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+};
+
+function render(){
+  renderNav();
+  updateMeter();
+  const mod = MODULES[current];
+  document.getElementById('content').innerHTML = renderModule(mod, current);
+  const prev = document.getElementById('prev-btn');
+  const next = document.getElementById('next-btn');
+  if(prev) prev.onclick = ()=>{ if(current>0){ current--; render(); window.scrollTo({top:0,behavior:'smooth'}); } };
+  if(next) next.onclick = ()=>{ if(current<MODULES.length-1){ current++; render(); window.scrollTo({top:0,behavior:'smooth'}); } };
+
+  const sendBtn = document.getElementById('send-cert-btn');
+  if(sendBtn) sendBtn.onclick = sendCertificate;
+}
+
+async function sendCertificate(){
+  const name = document.getElementById('cert-name').value.trim();
+  const email = document.getElementById('cert-email').value.trim();
+  const school = document.getElementById('cert-school').value.trim();
+  const whatsapp = document.getElementById('cert-whatsapp').value.trim();
+  const status = document.getElementById('cert-status');
+  const sendBtn = document.getElementById('send-cert-btn');
+
+  if(!name || !email || !school || !whatsapp){
+    status.textContent = 'Please fill in all four fields first.';
+    status.classList.remove('ok');
+    return;
+  }
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if(!emailOk){
+    status.textContent = 'That email address does not look right — please check it.';
+    status.classList.remove('ok');
+    return;
+  }
+  if(!SHEET_ENDPOINT){
+    status.textContent = 'Certificate sending is not configured yet.';
+    status.classList.remove('ok');
+    return;
+  }
+
+  sendBtn.disabled = true;
+  status.textContent = 'Generating your certificate and sending it now…';
+  status.classList.remove('ok');
+
+  const doneCount = MODULES.filter(m=>progress[m.id]).length;
+
+  try{
+    const dataUrl = await generateCertificateImage(name, school);
+    const certificateImage = dataUrl.split(',')[1]; // strip the data: prefix, keep raw base64
+
+    await logEvent('completed', {
+      name, email, school, whatsapp,
+      modulesCompleted: doneCount,
+      totalModules: MODULES.length,
+      certificateImage
+    });
+
+    progress['__cert'] = {name, email, school, whatsapp, sentAt: new Date().toISOString()};
+    await saveProgress();
+
+    status.textContent = 'Sent! Your certificate is on its way to ' + email + '.';
+    status.classList.add('ok');
+  }catch(err){
+    status.textContent = 'Something went wrong generating or sending your certificate — please try again.';
+    status.classList.remove('ok');
+  }finally{
+    sendBtn.disabled = false;
+  }
+}
+
+document.getElementById('menu-toggle').onclick = ()=>{
+  document.getElementById('sidebar').classList.toggle('open');
+};
+
+loadProgress();
+requestGeo();
+</script>
+</body>
+</html>
